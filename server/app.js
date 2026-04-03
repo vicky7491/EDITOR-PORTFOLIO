@@ -22,6 +22,7 @@ const contactRoutes     = require('./routes/contact.routes');
 const settingsRoutes    = require('./routes/settings.routes');
 const uploadRoutes      = require('./routes/upload.routes');
 const dashboardRoutes   = require('./routes/dashboard.routes');
+const mediaRoutes = require('./routes/media.routes');
 
 const app = express();
 
@@ -95,6 +96,7 @@ app.use('/api/settings',     settingsRoutes);
 // Admin-only routes (all internally protected with middleware)
 app.use('/api/admin/upload',    uploadRoutes);
 app.use('/api/admin/dashboard', dashboardRoutes);
+app.use('/api/admin/media', mediaRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────
 

@@ -5,8 +5,8 @@ dotenv.config();
 
 const mongoose  = require('mongoose');
 const bcrypt    = require('bcryptjs');
-const Admin     = require('../models/Admin.model');
-const { connectDB } = require('../config/db');
+const Admin     = require('./models/Admin.model');
+const { connectDB } = require('./config/db');
 
 const seed = async () => {
   await connectDB();
@@ -20,11 +20,10 @@ const seed = async () => {
     process.exit(0);
   }
 
-  const hashedPassword = await bcrypt.hash(password, 12);
 
   await Admin.create({
     email,
-    password: hashedPassword,
+    password,
     role: 'admin',
   });
 

@@ -1,1 +1,5 @@
-import api from './axiosInstance'; export const ping = () => api.get('/health');
+import axiosInstance from './axiosInstance';
+
+export const contactApi = {
+  submit: (data) => axiosInstance.post('/api/contact', data),
+};

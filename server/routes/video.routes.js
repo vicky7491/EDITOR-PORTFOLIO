@@ -5,6 +5,7 @@ const {
   getAllVideos,
   getFeaturedVideos,
   getVideoById,
+  getVideoByIdAdmin,
   incrementVideoViews,
   createVideo,
   updateVideo,
@@ -35,6 +36,9 @@ router.get('/:id', getVideoById);
 router.patch('/:id/view', incrementVideoViews);
 
 // ─── Admin routes ─────────────────────────────────────────────────────────────
+
+// GET /api/videos/by-id/:id  (admin only, BEFORE /:id)
+router.get('/by-id/:id', protect, adminOnly, getVideoByIdAdmin);
 
 // POST /api/videos
 router.post('/', protect, adminOnly, validateCreateVideo, createVideo);

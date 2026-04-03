@@ -25,6 +25,8 @@ const InquiryDetail      = lazy(() => import('@/pages/inquiries/InquiryDetail'))
 const HomepageEditor     = lazy(() => import('@/pages/homepage/HomepageEditor'));
 const SiteSettingsPage   = lazy(() => import('@/pages/settings/SiteSettingsPage'));
 const ChangePassword     = lazy(() => import('@/pages/settings/ChangePassword'));
+// const MediaLibrary       = lazy(() => import('@/pages/media/MediaLibrary'));
+// const ProjectReorder     = lazy(() => import('@/pages/projects/ProjectReorder'));
 
 const App = () => {
   const { getAccessToken, silentRefresh, logout } = useAuth();

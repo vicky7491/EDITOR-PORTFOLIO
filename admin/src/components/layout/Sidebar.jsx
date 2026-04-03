@@ -15,8 +15,10 @@ const NAV_ITEMS = [
     group: 'Content',
     links: [
       { to: '/admin/projects',    label: 'Projects',      icon: 'film' },
+      { to: '/admin/projects/reorder', label: 'Reorder', icon: 'sort' },
       { to: '/admin/videos',      label: 'Videos',        icon: 'play' },
       { to: '/admin/categories',  label: 'Categories',    icon: 'tag' },
+      { to: '/admin/media',    label: 'Media Library', icon: 'image' },
     ],
   },
   {
@@ -43,6 +45,8 @@ const NAV_ITEMS = [
 
 // ── Inline SVG icons (avoids icon lib dependency) ─────────────────────────────
 const ICONS = {
+  image:     <><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></>,
+  sort:      <><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></>,
   grid:      <><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></>,
   film:      <><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></>,
   play:      <><polygon points="5 3 19 12 5 21 5 3"/></>,

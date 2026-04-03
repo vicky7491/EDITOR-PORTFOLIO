@@ -30,26 +30,31 @@ const VideoUploader = () => {
   useEffect(() => {
     if (!isEditing) return;
     const load = async () => {
-      try {
-        const res = await axiosAdmin.get('/api/videos', { params: { limit: 200 } });
-        const video = res.data.data?.find((v) => v._id === id);
-        if (video) {
-          reset({
-            title:       video.title       || '',
-            description: video.description || '',
-            category:    video.category?._id || '',
-            featured:    video.featured    || false,
-            order:       video.order       || 0,
-            duration:    video.duration    || '',
-          });
-          setThumbnail(video.thumbnail || null);
-          setVideoMedia(video.videoUrl
-            ? { url: video.videoUrl, publicId: video.videoPublicId } : null);
-        }
-      } catch {
-        toast.error('Failed to load video');
-      }
-    };
+  try {
+    const res = await axiosAdmin.get(`/api/videos/by-id/${id}`);
+    const video = res.data.data;
+
+    if (video) {
+      reset({
+        title:       video.title       || '',
+        description: video.description || '',
+        category:    video.category?._id || '',
+        featured:    video.featured    || false,
+        order:       video.order       || 0,
+        duration:    video.duration    || '',
+      });
+      setThumbnail(video.thumbnail || null);
+      setVideoMedia(
+        video.videoUrl
+          ? { url: video.videoUrl, publicId: video.videoPublicId || '' }
+          : null
+      );
+    }
+  } catch {
+    toast.error('Failed to load video');
+    navigate('/admin/videos');
+  }
+};
     load();
   }, [id, isEditing, reset]);
 

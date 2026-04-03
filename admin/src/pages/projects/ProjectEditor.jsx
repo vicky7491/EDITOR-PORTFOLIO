@@ -59,45 +59,45 @@ const ProjectEditor = () => {
 
       // Realistic approach: fetch by ID using the PUT route existence
       const fetchProject = async () => {
-        try {
-          // Admin can GET /api/projects (all) then find the one
-          const res = await axiosAdmin.get('/api/projects', {
-            params: { limit: 1, _id: id }
-          });
-          // Or simply call update and pre-populate
-          // Best practice: add a GET single admin route
-          // For now we use the public slug route if published, else admin list
-          const listRes = await axiosAdmin.get('/api/projects', {
-            params: { limit: 200 }
-          });
-          const project = listRes.data.data?.find((p) => p._id === id);
-          if (project) {
-            reset({
-              title:            project.title || '',
-              shortDescription: project.shortDescription || '',
-              description:      project.description || '',
-              category:         project.category?._id || '',
-              clientName:       project.clientName || '',
-              projectDate:      project.projectDate
-                ? new Date(project.projectDate).toISOString().split('T')[0] : '',
-              softwareUsed: (project.softwareUsed || []).join(', '),
-              tags:         (project.tags || []).join(', '),
-              externalLink: project.externalLink || '',
-              status:       project.status || 'draft',
-              featured:     project.featured || false,
-              order:        project.order || 0,
-            });
-            setThumbnail(project.thumbnail || null);
-            setVideo(project.videoUrl
-              ? { url: project.videoUrl, publicId: project.videoPublicId }
-              : null);
-            setBeforeImg(project.beforeAfter?.before || null);
-            setAfterImg(project.beforeAfter?.after || null);
-          }
-        } catch (err) {
-          toast.error('Failed to load project');
-        }
-      };
+  try {
+    // Use the new admin-only by-id route
+    const res = await axiosAdmin.get(`/api/projects/by-id/${id}`);
+    const project = res.data.data;
+
+    if (project) {
+      reset({
+        title:            project.title            || '',
+        shortDescription: project.shortDescription || '',
+        description:      project.description      || '',
+        category:         project.category?._id    || '',
+        clientName:       project.clientName        || '',
+        projectDate:      project.projectDate
+          ? new Date(project.projectDate).toISOString().split('T')[0]
+          : '',
+        softwareUsed: (project.softwareUsed || []).join(', '),
+        tags:         (project.tags         || []).join(', '),
+        externalLink: project.externalLink  || '',
+        status:       project.status        || 'draft',
+        featured:     project.featured      || false,
+        order:        project.order         || 0,
+      });
+
+      setThumbnail(project.thumbnail || null);
+
+      setVideo(
+        project.videoUrl
+          ? { url: project.videoUrl, publicId: project.videoPublicId || '' }
+          : null
+      );
+
+      setBeforeImg(project.beforeAfter?.before || null);
+      setAfterImg( project.beforeAfter?.after  || null);
+    }
+  } catch (err) {
+    toast.error('Failed to load project');
+    navigate('/admin/projects');
+  }
+};
       fetchProject();
     }
   }, [id, isEditing, reset]);

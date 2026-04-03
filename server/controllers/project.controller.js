@@ -77,6 +77,21 @@ const getFeaturedProjects = async (req, res, next) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// @desc    Get single project by ID (admin — includes drafts)
+// @route   GET /api/projects/by-id/:id
+// @access  Admin
+// ─────────────────────────────────────────────────────────────────────────────
+const getProjectById = async (req, res, next) => {
+  try {
+    const project = await Project.findById(req.params.id).select('-__v');
+    if (!project) return next(new AppError('Project not found', 404));
+    return sendSuccess(res, 200, 'Project retrieved', project);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // @desc    Get single project by slug (public)
 // @route   GET /api/projects/:slug
 // @access  Public
@@ -259,6 +274,7 @@ const reorderProjects = async (req, res, next) => {
 module.exports = {
   getAllProjects,
   getFeaturedProjects,
+  getProjectById,
   getProjectBySlug,
   incrementProjectViews,
   createProject,

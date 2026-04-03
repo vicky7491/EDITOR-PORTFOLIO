@@ -1,61 +1,55 @@
+// The previous version had a module-level interceptorsReady flag that
+// couldn't be reset on HMR. This version fixes that:
+
 import axios from 'axios';
 
-// ── Base instance ─────────────────────────────────────────────────────────────
 const axiosAdmin = axios.create({
   baseURL:         import.meta.env.VITE_API_URL || '',
-  withCredentials: true,   // Always send cookies (needed for refresh token)
-  timeout:         15000,  // 15s timeout
-  headers: {
-    'Content-Type': 'application/json',
-  },
+  withCredentials: true,
+  timeout:         15000,
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// ── Track if interceptors have been set up (prevent double-registration) ──────
-let interceptorsReady = false;
+// Store interceptor IDs so we can eject and re-register
+let requestInterceptorId  = null;
+let responseInterceptorId = null;
 
-// ── Setup function — called from App.jsx after AuthContext is ready ─────────
 export const setupInterceptors = (getAccessToken, silentRefresh, onLogout) => {
-  if (interceptorsReady) return;
-  interceptorsReady = true;
+  // Eject any existing interceptors before re-registering
+  // This prevents duplicate interceptors on React HMR
+  if (requestInterceptorId  !== null) axiosAdmin.interceptors.request.eject(requestInterceptorId);
+  if (responseInterceptorId !== null) axiosAdmin.interceptors.response.eject(responseInterceptorId);
 
-  // ── Request interceptor: attach access token to every request ───────────────
-  axiosAdmin.interceptors.request.use(
+  // ── Request: attach access token ──────────────────────────────────────────
+  requestInterceptorId = axiosAdmin.interceptors.request.use(
     (config) => {
-      // Skip auth header for refresh call itself
       if (config._skipAuthRefresh) return config;
-
       const token = getAccessToken();
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-      }
+      if (token) config.headers.Authorization = `Bearer ${token}`;
       return config;
     },
     (error) => Promise.reject(error)
   );
 
-  // ── Response interceptor: handle 401 → try silent refresh → retry ────────────
-  axiosAdmin.interceptors.response.use(
+  // ── Response: handle 401 → silent refresh → retry ─────────────────────────
+  responseInterceptorId = axiosAdmin.interceptors.response.use(
     (response) => response,
     async (error) => {
-      const originalRequest = error.config;
+      const original = error.config;
 
-      // Only handle 401 Unauthorized errors, and only once per request
       if (
         error.response?.status === 401 &&
-        !originalRequest._retried &&
-        !originalRequest._skipAuthRefresh
+        !original._retried &&
+        !original._skipAuthRefresh
       ) {
-        originalRequest._retried = true;
+        original._retried = true;
 
-        // Attempt silent token refresh
         const newToken = await silentRefresh();
 
         if (newToken) {
-          // Retry the original request with the new token
-          originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          return axiosAdmin(originalRequest);
+          original.headers.Authorization = `Bearer ${newToken}`;
+          return axiosAdmin(original);
         } else {
-          // Refresh also failed — session dead, force logout
           onLogout();
           return Promise.reject(error);
         }

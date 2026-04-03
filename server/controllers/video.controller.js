@@ -86,6 +86,21 @@ const getVideoById = async (req, res, next) => {
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
+// @desc    Get single video by ID (admin — direct ID lookup)
+// @route   GET /api/videos/by-id/:id
+// @access  Admin
+// ─────────────────────────────────────────────────────────────────────────────
+const getVideoByIdAdmin = async (req, res, next) => {
+  try {
+    const video = await Video.findById(req.params.id).select('-__v');
+    if (!video) return next(new AppError('Video not found', 404));
+    return sendSuccess(res, 200, 'Video retrieved', video);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
 // @desc    Increment video view count
 // @route   PATCH /api/videos/:id/view
 // @access  Public
@@ -202,6 +217,7 @@ module.exports = {
   getAllVideos,
   getFeaturedVideos,
   getVideoById,
+  getVideoByIdAdmin,
   incrementVideoViews,
   createVideo,
   updateVideo,

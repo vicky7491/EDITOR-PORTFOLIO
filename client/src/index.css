@@ -1,4 +1,149 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-body { font-family: Inter, system-ui, sans-serif; }
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-dark-950 text-slate-100 font-sans overflow-x-hidden;
+    cursor: none; /* Custom cursor active */
+  }
+
+  /* Show default cursor on mobile */
+  @media (hover: none) {
+    body { cursor: auto; }
+  }
+
+  ::selection {
+    background: rgba(139, 92, 246, 0.35);
+    color: #fff;
+  }
+
+  ::-webkit-scrollbar { width: 5px; }
+  ::-webkit-scrollbar-track { background: #05050a; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(139,92,246,0.4);
+    border-radius: 999px;
+  }
+}
+
+@layer components {
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06];
+  }
+  .glass-strong {
+    @apply bg-white/[0.06] backdrop-blur-2xl border border-white/[0.10];
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-brand-400 via-purple-400 to-brand-300
+           bg-clip-text text-transparent;
+  }
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold-400 to-gold-500
+           bg-clip-text text-transparent;
+  }
+
+  /* Section container */
+  .section-container {
+    @apply max-w-7xl mx-auto px-6 lg:px-8;
+  }
+
+  /* Cinematic section padding */
+  .section-py {
+    @apply py-24 lg:py-32;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           bg-brand-600 hover:bg-brand-500 text-white
+           px-6 py-3 rounded-full text-sm font-medium
+           transition-all duration-300
+           hover:shadow-lg hover:shadow-brand-600/30
+           active:scale-[0.97];
+  }
+
+  /* Outline button */
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2
+           border border-white/20 hover:border-brand-500/60
+           text-slate-300 hover:text-white
+           px-6 py-3 rounded-full text-sm font-medium
+           transition-all duration-300 backdrop-blur-sm
+           hover:bg-brand-600/10
+           active:scale-[0.97];
+  }
+
+  /* Section label (small uppercase above titles) */
+  .section-label {
+    @apply inline-flex items-center gap-2 text-brand-400 text-xs
+           font-semibold uppercase tracking-[0.2em] mb-4;
+  }
+
+  /* Section title */
+  .section-title {
+    @apply text-4xl lg:text-5xl font-bold text-white leading-tight;
+  }
+
+  /* Card hover lift */
+  .card-hover {
+    @apply transition-all duration-500
+           hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-600/10;
+  }
+
+  /* Noise texture overlay */
+  .noise-overlay {
+    @apply after:absolute after:inset-0 after:bg-noise after:opacity-40
+           after:pointer-events-none;
+  }
+
+  /* Magnetic button wrapper */
+  .magnetic { @apply relative inline-block; }
+}
+
+@layer utilities {
+  .text-balance { text-wrap: balance; }
+
+  /* Hide scrollbar but keep scroll functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+  /* Clip diagonal section */
+  .clip-diagonal {
+    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+  }
+  .clip-diagonal-reverse {
+    clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+  }
+}
+
+/* ── Video reveal animation ───────────────────────────────────────────────── */
+@keyframes revealWidth {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+/* ── Gradient border animation ────────────────────────────────────────────── */
+@keyframes gradientBorder {
+  0%,100% { background-position: 0% 50%; }
+  50%     { background-position: 100% 50%; }
+}
+
+.animated-border {
+  background: linear-gradient(270deg, #8b5cf6, #0ea5e9, #8b5cf6);
+  background-size: 200% 200%;
+  animation: gradientBorder 4s ease infinite;
+}
