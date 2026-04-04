@@ -1,187 +1,265 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useForm, useFieldArray } from 'react-hook-form';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import axiosAdmin from '@/api/axiosAdmin';
 
-const STATUS_OPTIONS = ['unread','read','replied'];
+const TABS = ['hero','stats','social','contact','seo','footer'];
 
-const InquiryDetail = () => {
-  const { id }   = useParams();
-  const navigate = useNavigate();
+const HomepageEditor = () => {
+  const [activeTab, setActiveTab]   = useState('hero');
+  const [isSaving,  setIsSaving]    = useState(false);
+  const [settings,  setSettings]    = useState(null);
 
-  const [inquiry,   setInquiry]   = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [note,      setNote]      = useState('');
-  const [savingNote, setSavingNote] = useState(false);
+  const { register, handleSubmit, reset, control } = useForm();
+  const { fields: ctaFields, append: appendCta,
+          remove: removeCta } = useFieldArray({ control, name: 'hero.ctaButtons' });
+  const { fields: statFields, append: appendStat,
+          remove: removeStat } = useFieldArray({ control, name: 'stats' });
 
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const res = await axiosAdmin.get(`/api/contact/inquiries/${id}`);
-        setInquiry(res.data.data);
-        setNote(res.data.data?.adminNotes || '');
-      } catch {
-        toast.error('Failed to load inquiry');
-        navigate('/admin/inquiries');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetch();
-  }, [id, navigate]);
+    axiosAdmin.get('/api/settings/admin').then((res) => {
+      const s = res.data.data;
+      setSettings(s);
+      reset({
+        hero:         s.hero         || {},
+        stats:        s.stats        || [],
+        socialLinks:  s.socialLinks  || {},
+        contactInfo:  s.contactInfo  || {},
+        seo:          s.seo          || {},
+        footerText:   s.footerText   || '',
+        showreelUrl:  s.showreelUrl  || '',
+        aboutPreview: s.aboutPreview || '',
+        showTestimonialsSection: s.showTestimonialsSection,
+        showServicesSection:     s.showServicesSection,
+        showShowreelSection:     s.showShowreelSection,
+      });
+    }).catch(() => toast.error('Failed to load settings'));
+  }, [reset]);
 
-  const handleStatusChange = async (status) => {
+  const onSubmit = async (data) => {
+    setIsSaving(true);
     try {
-      const res = await axiosAdmin.patch(`/api/contact/inquiries/${id}/status`, { status });
-      setInquiry(res.data.data);
-      toast.success(`Marked as ${status}`);
-    } catch { toast.error('Failed to update status'); }
+      await axiosAdmin.put('/api/settings', data);
+      toast.success('Homepage content updated');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Save failed');
+    } finally {
+      setIsSaving(false);
+    }
   };
-
-  const handleSaveNote = async () => {
-    setSavingNote(true);
-    try {
-      await axiosAdmin.patch(`/api/contact/inquiries/${id}/note`, { note });
-      toast.success('Note saved');
-    } catch { toast.error('Failed to save note'); }
-    finally { setSavingNote(false); }
-  };
-
-  if (isLoading) {
-    return <div className="glass-card h-64 animate-pulse rounded-xl"/>;
-  }
-
-  if (!inquiry) return null;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="max-w-2xl space-y-5"
-    >
-      {/* Back */}
-      <button onClick={() => navigate('/admin/inquiries')}
-              className="text-sm text-slate-500 hover:text-slate-300
-                         transition-colors flex items-center gap-1">
-        ← Back to inquiries
-      </button>
+    <motion.div initial={{ opacity:0,y:8 }} animate={{ opacity:1,y:0 }}
+                className="max-w-2xl space-y-5">
 
-      {/* Header */}
-      <div className="glass-card p-6">
-        <div className="flex items-start justify-between gap-4 mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-600
-                            to-accent-500 flex items-center justify-center
-                            text-white font-semibold">
-              {inquiry.name[0]?.toUpperCase()}
-            </div>
-            <div>
-              <h2 className="text-lg font-semibold text-slate-100">{inquiry.name}</h2>
-              <a href={`mailto:${inquiry.email}`}
-                 className="text-sm text-brand-400 hover:underline">
-                {inquiry.email}
-              </a>
-            </div>
-          </div>
-
-          {/* Status selector */}
-          <select
-            value={inquiry.status}
-            onChange={(e) => handleStatusChange(e.target.value)}
-            className="admin-input w-auto text-xs"
-          >
-            {STATUS_OPTIONS.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Meta */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
-          {inquiry.phone && (
-            <div className="glass-card p-3">
-              <p className="text-xs text-slate-500 mb-0.5">Phone</p>
-              <p className="text-sm text-slate-300">{inquiry.phone}</p>
-            </div>
-          )}
-          {inquiry.service && (
-            <div className="glass-card p-3">
-              <p className="text-xs text-slate-500 mb-0.5">Service</p>
-              <p className="text-sm text-slate-300">{inquiry.service}</p>
-            </div>
-          )}
-          {inquiry.budget && (
-            <div className="glass-card p-3">
-              <p className="text-xs text-slate-500 mb-0.5">Budget</p>
-              <p className="text-sm text-slate-300">{inquiry.budget}</p>
-            </div>
-          )}
-          <div className="glass-card p-3">
-            <p className="text-xs text-slate-500 mb-0.5">Received</p>
-            <p className="text-sm text-slate-300">
-              {new Date(inquiry.createdAt).toLocaleDateString('en-US', {
-                year: 'numeric', month: 'long', day: 'numeric',
-              })}
-            </p>
-          </div>
-        </div>
-
-        {/* Subject */}
-        {inquiry.subject && (
-          <div className="mb-3">
-            <p className="text-xs text-slate-500 mb-1">Subject</p>
-            <p className="text-sm font-medium text-slate-200">{inquiry.subject}</p>
-          </div>
-        )}
-
-        {/* Message */}
+      <div className="flex items-center justify-between">
         <div>
-          <p className="text-xs text-slate-500 mb-2">Message</p>
-          <div className="bg-surface-900/60 rounded-xl p-4">
-            <p className="text-sm text-slate-300 leading-relaxed whitespace-pre-wrap">
-              {inquiry.message}
-            </p>
-          </div>
+          <h2 className="text-xl font-semibold text-slate-100">Homepage Editor</h2>
+          <p className="text-slate-500 text-sm mt-0.5">
+            Edit all public-facing homepage content
+          </p>
         </div>
-      </div>
-
-      {/* Admin note */}
-      <div className="glass-card p-5 space-y-3">
-        <h3 className="text-sm font-semibold text-slate-300">Admin notes</h3>
-        <p className="text-xs text-slate-600">
-          Private notes — not visible to the client.
-        </p>
-        <textarea
-          rows={4}
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          className="admin-input resize-none"
-          placeholder="Add notes about this inquiry..."
-        />
-        <button onClick={handleSaveNote} disabled={savingNote}
-                className="btn-primary text-sm">
-          {savingNote ? 'Saving...' : 'Save note'}
+        <button form="homepage-form" type="submit" disabled={isSaving}
+                className="btn-primary">
+          {isSaving ? 'Saving...' : 'Save changes'}
         </button>
       </div>
 
-      {/* Quick reply */}
-      <div className="glass-card p-5">
-        <h3 className="text-sm font-semibold text-slate-300 mb-3">Quick reply</h3>
-        <a
-          href={`mailto:${inquiry.email}?subject=Re: ${inquiry.subject || 'Your Inquiry'}`}
-          className="btn-primary inline-flex"
-        >
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               strokeWidth={1.5} className="w-4 h-4">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
-          </svg>
-          Reply via email
-        </a>
+      {/* Tabs */}
+      <div className="flex flex-wrap gap-1 glass-card p-1">
+        {TABS.map((tab) => (
+          <button key={tab} type="button" onClick={() => setActiveTab(tab)}
+                  className={`px-4 py-2 rounded-lg text-xs font-medium capitalize
+                    transition-all duration-200
+                    ${activeTab === tab
+                      ? 'bg-brand-600 text-white'
+                      : 'text-slate-400 hover:text-slate-200'}`}>
+            {tab}
+          </button>
+        ))}
       </div>
+
+      <form id="homepage-form" onSubmit={handleSubmit(onSubmit)}>
+
+        {/* ── Hero ─────────────────────────────────────────────────────── */}
+        {activeTab === 'hero' && (
+          <div className="glass-card p-6 space-y-5">
+            <div>
+              <label className="admin-label">Hero title</label>
+              <input className="admin-input"
+                     placeholder="Transforming Footage Into Cinematic Stories"
+                     {...register('hero.title')}/>
+            </div>
+            <div>
+              <label className="admin-label">Hero subtitle</label>
+              <textarea rows={3} className="admin-input resize-none"
+                        placeholder="Short tagline below the main title"
+                        {...register('hero.subtitle')}/>
+            </div>
+            <div>
+              <label className="admin-label">Showreel URL</label>
+              <input type="url" className="admin-input"
+                     placeholder="https://cloudinary.com/..."
+                     {...register('showreelUrl')}/>
+            </div>
+            <div>
+              <label className="admin-label">About preview text</label>
+              <textarea rows={3} className="admin-input resize-none"
+                        placeholder="Short about blurb for homepage"
+                        {...register('aboutPreview')}/>
+            </div>
+
+            {/* CTA buttons */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="admin-label mb-0">CTA buttons</label>
+                <button type="button" onClick={() => appendCta({ label:'', link:'', variant:'primary' })}
+                        className="btn-secondary text-xs py-1">+ Add CTA</button>
+              </div>
+              <div className="space-y-2">
+                {ctaFields.map((field, i) => (
+                  <div key={field.id} className="flex gap-2">
+                    <input className="admin-input flex-1" placeholder="Label"
+                           {...register(`hero.ctaButtons.${i}.label`)}/>
+                    <input className="admin-input flex-1" placeholder="/link or #anchor"
+                           {...register(`hero.ctaButtons.${i}.link`)}/>
+                    <select className="admin-input w-32"
+                            {...register(`hero.ctaButtons.${i}.variant`)}>
+                      <option value="primary">Primary</option>
+                      <option value="secondary">Secondary</option>
+                      <option value="outline">Outline</option>
+                    </select>
+                    <button type="button" onClick={() => removeCta(i)}
+                            className="btn-danger px-2 py-2">×</button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Section toggles */}
+            <div className="space-y-3 pt-2 border-t border-white/5">
+              <p className="text-sm font-medium text-slate-400">Section visibility</p>
+              {[
+                ['showShowreelSection',     'Show showreel section'],
+                ['showServicesSection',     'Show services section'],
+                ['showTestimonialsSection', 'Show testimonials section'],
+              ].map(([key, label]) => (
+                <div key={key} className="flex items-center gap-3">
+                  <input type="checkbox" id={key} className="w-4 h-4 accent-brand-500"
+                         {...register(key)}/>
+                  <label htmlFor={key} className="text-sm text-slate-300 cursor-pointer">
+                    {label}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Stats ────────────────────────────────────────────────────── */}
+        {activeTab === 'stats' && (
+          <div className="glass-card p-6 space-y-4">
+            <div className="flex items-center justify-between mb-2">
+              <label className="admin-label mb-0">Homepage stats</label>
+              <button type="button" onClick={() => appendStat({ label:'', value:'' })}
+                      className="btn-secondary text-xs py-1">+ Add stat</button>
+            </div>
+            <p className="text-xs text-slate-600 -mt-2">
+              e.g. "150+" Projects, "5 Years" Experience
+            </p>
+            <div className="space-y-2">
+              {statFields.map((field, i) => (
+                <div key={field.id} className="flex gap-2">
+                  <input className="admin-input flex-1" placeholder="Value (e.g. 150+)"
+                         {...register(`stats.${i}.value`)}/>
+                  <input className="admin-input flex-1" placeholder="Label (e.g. Projects)"
+                         {...register(`stats.${i}.label`)}/>
+                  <button type="button" onClick={() => removeStat(i)}
+                          className="btn-danger px-2">×</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Social ───────────────────────────────────────────────────── */}
+        {activeTab === 'social' && (
+          <div className="glass-card p-6 space-y-4">
+            {['instagram','youtube','twitter','linkedin','behance','vimeo'].map((platform) => (
+              <div key={platform}>
+                <label className="admin-label capitalize">{platform}</label>
+                <input type="url" className="admin-input"
+                       placeholder={`https://${platform}.com/...`}
+                       {...register(`socialLinks.${platform}`)}/>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── Contact ──────────────────────────────────────────────────── */}
+        {activeTab === 'contact' && (
+          <div className="glass-card p-6 space-y-4">
+            {[
+              ['email',    'Email address',  'email',  'contact@cineedit.com'],
+              ['phone',    'Phone number',   'tel',    '+1 234 567 8901'],
+              ['whatsapp', 'WhatsApp',       'tel',    '+1 234 567 8901'],
+              ['location', 'Location',       'text',   'Los Angeles, CA'],
+            ].map(([key, label, type, placeholder]) => (
+              <div key={key}>
+                <label className="admin-label">{label}</label>
+                <input type={type} className="admin-input" placeholder={placeholder}
+                       {...register(`contactInfo.${key}`)}/>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* ── SEO ──────────────────────────────────────────────────────── */}
+        {activeTab === 'seo' && (
+          <div className="glass-card p-6 space-y-4">
+            <div>
+              <label className="admin-label">Default page title</label>
+              <input className="admin-input"
+                     placeholder="CineEdit — Professional Video Editor"
+                     {...register('seo.defaultTitle')}/>
+            </div>
+            <div>
+              <label className="admin-label">Meta description</label>
+              <textarea rows={3} className="admin-input resize-none"
+                        placeholder="Brief site description for search engines (150–160 chars)"
+                        {...register('seo.description')}/>
+            </div>
+            <div>
+              <label className="admin-label">Keywords</label>
+              <input className="admin-input"
+                     placeholder="video editor, cinematic, post-production"
+                     {...register('seo.keywords')}/>
+            </div>
+            <div>
+              <label className="admin-label">OG image URL</label>
+              <input type="url" className="admin-input"
+                     placeholder="https://res.cloudinary.com/..."
+                     {...register('seo.ogImage')}/>
+            </div>
+          </div>
+        )}
+
+        {/* ── Footer ───────────────────────────────────────────────────── */}
+        {activeTab === 'footer' && (
+          <div className="glass-card p-6 space-y-4">
+            <div>
+              <label className="admin-label">Footer text</label>
+              <input className="admin-input"
+                     placeholder="© 2024 CineEdit. All rights reserved."
+                     {...register('footerText')}/>
+            </div>
+          </div>
+        )}
+
+      </form>
     </motion.div>
   );
 };
 
-export default InquiryDetail;
+export default HomepageEditor;

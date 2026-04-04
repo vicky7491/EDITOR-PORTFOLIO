@@ -4,6 +4,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from 'react-hot-toast';
 
+// Register GSAP plugins before anything else renders
+import '@/utils/gsap';
+
 import App from './App';
 import { SiteProvider } from './context/SiteContext';
 import './index.css';

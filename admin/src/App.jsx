@@ -25,8 +25,8 @@ const InquiryDetail      = lazy(() => import('@/pages/inquiries/InquiryDetail'))
 const HomepageEditor     = lazy(() => import('@/pages/homepage/HomepageEditor'));
 const SiteSettingsPage   = lazy(() => import('@/pages/settings/SiteSettingsPage'));
 const ChangePassword     = lazy(() => import('@/pages/settings/ChangePassword'));
-// const MediaLibrary       = lazy(() => import('@/pages/media/MediaLibrary'));
-// const ProjectReorder     = lazy(() => import('@/pages/projects/ProjectReorder'));
+const MediaLibrary       = lazy(() => import('@/pages/media/MediaLibrary'));
+const ProjectReorder     = lazy(() => import('@/pages/projects/ProjectReorder'));
 
 const App = () => {
   const { getAccessToken, silentRefresh, logout } = useAuth();
@@ -71,6 +71,8 @@ const App = () => {
           <Route path="categories"         element={<CategoriesManager />} />
           <Route path="services"           element={<ServicesManager />} />
           <Route path="testimonials"       element={<TestimonialsManager />} />
+          <Route path="media"              element={<MediaLibrary/>} />
+          <Route path="projects/reorder"   element={<ProjectReorder />} />
 
           {/* Inquiries */}
           <Route path="inquiries"          element={<InquiriesManager />} />

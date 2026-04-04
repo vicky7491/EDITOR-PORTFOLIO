@@ -1,96 +1,150 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
-import useMediaQuery from '@/hooks/useMediaQuery';
+import { gsap } from '@/utils/gsap';
 
 const CustomCursor = () => {
-  const isMobile  = useMediaQuery('(hover: none)');
-  const [variant, setVariant] = useState('default'); // default | hover | click
-  const [label,   setLabel]   = useState('');
-
-  const mouseX = useMotionValue(-100);
-  const mouseY = useMotionValue(-100);
-
-  // Smooth following spring
-  const springX = useSpring(mouseX, { stiffness: 400, damping: 35, mass: 0.5 });
-  const springY = useSpring(mouseY, { stiffness: 400, damping: 35, mass: 0.5 });
-
-  // Dot follows exactly
-  const dotX = useSpring(mouseX, { stiffness: 800, damping: 40 });
-  const dotY = useSpring(mouseY, { stiffness: 800, damping: 40 });
+  const dotRef   = useRef(null);
+  const ringRef  = useRef(null);
+  const posRef   = useRef({ x: -100, y: -100 });
+  const ringPos  = useRef({ x: -100, y: -100 });
+  const [state, setState] = useState('default'); // 'default' | 'hover' | 'click' | 'text'
 
   useEffect(() => {
-    if (isMobile) return;
+    const dot  = dotRef.current;
+    const ring = ringRef.current;
+    if (!dot || !ring) return;
 
-    const move = (e) => {
-      mouseX.set(e.clientX);
-      mouseY.set(e.clientY);
+    let rafId;
+
+    // ── Smooth ring follow ─────────────────────────────────────────────────
+    const animateRing = () => {
+      ringPos.current.x += (posRef.current.x - ringPos.current.x) * 0.12;
+      ringPos.current.y += (posRef.current.y - ringPos.current.y) * 0.12;
+      ring.style.transform =
+        `translate(${ringPos.current.x - 16}px, ${ringPos.current.y - 16}px)`;
+      rafId = requestAnimationFrame(animateRing);
+    };
+    rafId = requestAnimationFrame(animateRing);
+
+    // ── Track mouse ────────────────────────────────────────────────────────
+    const onMove = (e) => {
+      posRef.current.x = e.clientX;
+      posRef.current.y = e.clientY;
+      dot.style.transform =
+        `translate(${e.clientX - 4}px, ${e.clientY - 4}px)`;
     };
 
-    const handleDown = () => setVariant('click');
-    const handleUp   = () => setVariant('default');
+    const onDown = () => setState('click');
+    const onUp   = () => setState((s) => s === 'click' ? 'default' : s);
 
-    // Detect hoverable elements
-    const handleEnter = (e) => {
-      const el = e.target.closest('a, button, [data-cursor]');
-      if (el) {
-        setVariant('hover');
-        setLabel(el.dataset.cursor || '');
-      }
-    };
-    const handleLeave = (e) => {
-      const el = e.target.closest('a, button, [data-cursor]');
-      if (el) { setVariant('default'); setLabel(''); }
+    // ── Magnetic effect on interactive elements ────────────────────────────
+    let magnetCleanups = [];
+
+    const applyMagnetic = () => {
+      magnetCleanups.forEach((fn) => fn());
+      magnetCleanups = [];
+
+      document.querySelectorAll('[data-magnetic]').forEach((el) => {
+        const strength = parseFloat(el.dataset.magnetic) || 0.4;
+
+        const onEnter = () => setState('hover');
+        const onLeave = () => {
+          setState('default');
+          gsap.to(el, {
+            x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1, 0.4)',
+          });
+        };
+        const onMagMove = (e) => {
+          const rect   = el.getBoundingClientRect();
+          const cx     = rect.left + rect.width  / 2;
+          const cy     = rect.top  + rect.height / 2;
+          const dx     = e.clientX - cx;
+          const dy     = e.clientY - cy;
+          gsap.to(el, {
+            x: dx * strength, y: dy * strength,
+            duration: 0.4, ease: 'power2.out',
+          });
+        };
+
+        el.addEventListener('mouseenter', onEnter);
+        el.addEventListener('mouseleave', onLeave);
+        el.addEventListener('mousemove',  onMagMove);
+
+        magnetCleanups.push(() => {
+          el.removeEventListener('mouseenter', onEnter);
+          el.removeEventListener('mouseleave', onLeave);
+          el.removeEventListener('mousemove',  onMagMove);
+        });
+      });
+
+      // Text inputs and paragraphs — beam cursor
+      document.querySelectorAll('input, textarea, p, [data-cursor-text]').forEach((el) => {
+        const onEnter = () => setState('text');
+        const onLeave = () => setState('default');
+        el.addEventListener('mouseenter', onEnter);
+        el.addEventListener('mouseleave', onLeave);
+        magnetCleanups.push(() => {
+          el.removeEventListener('mouseenter', onEnter);
+          el.removeEventListener('mouseleave', onLeave);
+        });
+      });
+
+      // Links and buttons — expand ring
+      document.querySelectorAll('a, button, [role="button"]').forEach((el) => {
+        if (el.dataset.magnetic !== undefined) return; // already handled
+        const onEnter = () => setState('hover');
+        const onLeave = () => setState('default');
+        el.addEventListener('mouseenter', onEnter);
+        el.addEventListener('mouseleave', onLeave);
+        magnetCleanups.push(() => {
+          el.removeEventListener('mouseenter', onEnter);
+          el.removeEventListener('mouseleave', onLeave);
+        });
+      });
     };
 
-    window.addEventListener('mousemove',  move);
-    window.addEventListener('mousedown',  handleDown);
-    window.addEventListener('mouseup',    handleUp);
-    document.addEventListener('mouseover', handleEnter);
-    document.addEventListener('mouseout',  handleLeave);
+    // Re-apply after DOM updates (route changes)
+    const observer = new MutationObserver(applyMagnetic);
+    observer.observe(document.body, { childList: true, subtree: true });
+    applyMagnetic();
+
+    window.addEventListener('mousemove',  onMove,  { passive: true });
+    window.addEventListener('mousedown',  onDown);
+    window.addEventListener('mouseup',    onUp);
 
     return () => {
-      window.removeEventListener('mousemove',  move);
-      window.removeEventListener('mousedown',  handleDown);
-      window.removeEventListener('mouseup',    handleUp);
-      document.removeEventListener('mouseover', handleEnter);
-      document.removeEventListener('mouseout',  handleLeave);
+      cancelAnimationFrame(rafId);
+      observer.disconnect();
+      magnetCleanups.forEach((fn) => fn());
+      window.removeEventListener('mousemove',  onMove);
+      window.removeEventListener('mousedown',  onDown);
+      window.removeEventListener('mouseup',    onUp);
     };
-  }, [isMobile, mouseX, mouseY]);
+  }, []);
 
-  if (isMobile) return null;
-
-  const variants = {
-    default: { width: 32, height: 32, backgroundColor: 'transparent',
-               border: '1.5px solid rgba(167,139,250,0.6)', x: -16, y: -16 },
-    hover:   { width: 64, height: 64, backgroundColor: 'rgba(139,92,246,0.12)',
-               border: '1.5px solid rgba(139,92,246,0.8)', x: -32, y: -32 },
-    click:   { width: 24, height: 24, backgroundColor: 'rgba(139,92,246,0.3)',
-               border: '1.5px solid rgba(167,139,250,0.9)', x: -12, y: -12 },
-  };
+  // ── Cursor state styles ───────────────────────────────────────────────────
+  const dotSize  = state === 'click' ? 'scale-50'  : 'scale-100';
+  const ringSize =
+    state === 'hover'  ? 'w-12 h-12 opacity-60 border-violet-400'    :
+    state === 'click'  ? 'w-6  h-6  opacity-90 border-violet-400'    :
+    state === 'text'   ? 'w-1  h-6  opacity-90 border-violet-400 rounded-none' :
+    'w-8 h-8 opacity-50 border-white/50';
 
   return (
     <>
-      {/* Outer ring */}
-      <motion.div
-        className="fixed top-0 left-0 rounded-full pointer-events-none z-[9999]
-                   flex items-center justify-center"
-        style={{ left: springX, top: springY }}
-        animate={variant}
-        variants={variants}
-        transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      >
-        {label && (
-          <span className="text-[10px] font-medium text-brand-300 whitespace-nowrap">
-            {label}
-          </span>
-        )}
-      </motion.div>
-
-      {/* Center dot */}
-      <motion.div
-        className="fixed top-0 left-0 w-1.5 h-1.5 rounded-full
-                   bg-brand-400 pointer-events-none z-[9999]"
-        style={{ left: dotX, top: dotY, x: -3, y: -3 }}
+      {/* Dot — instant position */}
+      <div
+        ref={dotRef}
+        className={`fixed top-0 left-0 z-[9999] w-2 h-2 rounded-full
+                    bg-violet-400 pointer-events-none
+                    transition-transform duration-150 ${dotSize}`}
+        style={{ willChange: 'transform' }}
+      />
+      {/* Ring — spring follow */}
+      <div
+        ref={ringRef}
+        className={`fixed top-0 left-0 z-[9998] rounded-full border pointer-events-none
+                    transition-all duration-200 ${ringSize}`}
+        style={{ willChange: 'transform' }}
       />
     </>
   );
