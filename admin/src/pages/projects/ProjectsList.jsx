@@ -20,7 +20,7 @@ const ProjectsList = () => {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data: projects, meta, isLoading, refetch } = useFetch(
-    '/api/admin/projects',
+    '/api/projects',
     { page, limit: 15, search, status: statusFilter }
   );
 

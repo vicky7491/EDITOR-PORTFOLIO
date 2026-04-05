@@ -12,7 +12,7 @@ const Showreel = () => {
 
   const showreelUrl = settings?.showreelUrl;
 
-  if (!showreelUrl && !settings) return null;
+ if (settings && !settings.showShowreelSection) return null;
 
   const handlePlay = () => {
     setPlaying(true);

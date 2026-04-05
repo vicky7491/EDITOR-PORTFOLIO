@@ -9,7 +9,7 @@ export const SiteProvider = ({ children }) => {
 
   useEffect(() => {
     siteApi.getSettings()
-      .then((data) => setSettings(data))
+      .then((res) => setSettings(res.data.data))
       .catch((err) => console.error('Failed to load site settings:', err))
       .finally(() => setIsLoading(false));
   }, []);
