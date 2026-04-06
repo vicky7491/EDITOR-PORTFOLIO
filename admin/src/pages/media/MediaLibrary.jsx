@@ -8,7 +8,7 @@ import {
   bulkDeleteAssets,
   deleteAsset,
 } from '@/api/mediaApi';
-import useUpload   from '@/hooks/useUpload';
+import useUpload    from '@/hooks/useUpload';
 import ConfirmModal from '@/components/ui/ConfirmModal';
 import SearchBar    from '@/components/ui/SearchBar';
 
@@ -28,87 +28,115 @@ const formatBytes = (bytes) => {
   return `${(bytes / 1048576).toFixed(1)} MB`;
 };
 
-const AssetCard = ({ asset, selected, onSelect, onDelete, deleting }) => (
-  <div
-    onClick={() => onSelect(asset)}
-    className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer
-      group transition-all duration-150
-      ${selected
-        ? 'ring-2 ring-brand-400 ring-offset-2 ring-offset-surface-950'
-        : 'hover:ring-1 hover:ring-white/20'}`}
-  >
-    {/* Thumbnail */}
-    <div className="w-full h-full bg-surface-800">
-      {asset.resourceType === 'video' ? (
-        <>
-          {asset.thumbnailUrl
-            ? <img src={asset.thumbnailUrl} alt="" className="w-full h-full object-cover"/>
-            : (
-              <div className="w-full h-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                     strokeWidth={1.5} className="w-8 h-8 text-slate-600">
-                  <polygon points="5 3 19 12 5 21 5 3"/>
-                </svg>
-              </div>
-            )
-          }
-          {/* Video indicator */}
-          <div className="absolute top-1.5 left-1.5">
-            <span className="text-[9px] bg-surface-900/80 text-slate-400
-                             px-1.5 py-0.5 rounded font-medium">
-              VIDEO
-            </span>
-          </div>
-        </>
-      ) : (
-        <img src={asset.url} alt="" className="w-full h-full object-cover" loading="lazy"/>
+const AssetCard = ({ asset, selected, onSelect, onDelete, deleting }) => {
+  const handleCopy = (e) => {
+    e.stopPropagation();
+    navigator.clipboard.writeText(asset.url)
+      .then(() => toast.success('URL copied'))
+      .catch(() => toast.error('Copy failed'));
+  };
+
+  return (
+    <div
+      onClick={() => onSelect(asset)}
+      className={`relative aspect-square rounded-xl overflow-hidden cursor-pointer
+        group transition-all duration-150
+        ${selected
+          ? 'ring-2 ring-brand-400 ring-offset-2 ring-offset-surface-950'
+          : 'hover:ring-1 hover:ring-white/20'}`}
+    >
+      {/* Thumbnail */}
+      <div className="w-full h-full bg-surface-800">
+        {asset.resourceType === 'video' ? (
+          <>
+            {asset.thumbnailUrl
+              ? <img src={asset.thumbnailUrl} alt="" className="w-full h-full object-cover"/>
+              : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                       strokeWidth={1.5} className="w-8 h-8 text-slate-600">
+                    <polygon points="5 3 19 12 5 21 5 3"/>
+                  </svg>
+                </div>
+              )
+            }
+            <div className="absolute top-1.5 left-1.5">
+              <span className="text-[9px] bg-surface-900/80 text-slate-400
+                               px-1.5 py-0.5 rounded font-medium">
+                VIDEO
+              </span>
+            </div>
+          </>
+        ) : (
+          <img src={asset.url} alt="" className="w-full h-full object-cover" loading="lazy"/>
+        )}
+      </div>
+
+      {/* Selected indicator */}
+      {selected && (
+        <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full
+                        bg-brand-500 flex items-center justify-center">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white"
+               strokeWidth={2.5} className="w-3 h-3">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
       )}
-    </div>
 
-    {/* Selected indicator */}
-    {selected && (
-      <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full
-                      bg-brand-500 flex items-center justify-center">
-        <svg viewBox="0 0 24 24" fill="none" stroke="white"
-             strokeWidth={2.5} className="w-3 h-3">
-          <polyline points="20 6 9 17 4 12"/>
-        </svg>
-      </div>
-    )}
+      {/* Hover overlay */}
+      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100
+                      transition-opacity flex flex-col items-start justify-end p-2 gap-1">
+        <p className="text-[9px] text-white/70 truncate w-full">
+          {asset.publicId.split('/').pop()}
+        </p>
+        <div className="flex items-center justify-between w-full gap-1">
+          <span className="text-[9px] text-white/50">{formatBytes(asset.bytes)}</span>
+          <div className="flex gap-1">
 
-    {/* Hover overlay */}
-    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100
-                    transition-opacity flex flex-col items-start justify-end p-2 gap-1">
-      <p className="text-[9px] text-white/70 truncate w-full">
-        {asset.publicId.split('/').pop()}
-      </p>
-      <div className="flex items-center justify-between w-full">
-        <span className="text-[9px] text-white/50">{formatBytes(asset.bytes)}</span>
-        <button
-          onClick={(e) => { e.stopPropagation(); onDelete(asset); }}
-          disabled={deleting}
-          className="w-5 h-5 rounded bg-red-600/80 flex items-center justify-center
-                     hover:bg-red-600 transition-colors shrink-0"
-        >
-          {deleting ? (
-            <svg className="animate-spin w-3 h-3 text-white" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={2}
-                      className="opacity-25"/>
-              <path d="M4 12a8 8 0 0 1 8-8" stroke="currentColor" strokeWidth={2}
-                    strokeLinecap="round"/>
-            </svg>
-          ) : (
-            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2}
-                 className="w-3 h-3">
-              <polyline points="3 6 5 6 21 6"/>
-              <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
-            </svg>
-          )}
-        </button>
+            {/* Copy URL */}
+            <button
+              onClick={handleCopy}
+              className="w-5 h-5 rounded bg-brand-600/80 flex items-center justify-center
+                         hover:bg-brand-600 transition-colors shrink-0"
+              title="Copy URL"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="white"
+                   strokeWidth={2} className="w-3 h-3">
+                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+              </svg>
+            </button>
+
+            {/* Delete */}
+            <button
+              onClick={(e) => { e.stopPropagation(); onDelete(asset); }}
+              disabled={deleting}
+              className="w-5 h-5 rounded bg-red-600/80 flex items-center justify-center
+                         hover:bg-red-600 transition-colors shrink-0"
+              title="Delete"
+            >
+              {deleting ? (
+                <svg className="animate-spin w-3 h-3 text-white" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth={2}
+                          className="opacity-25"/>
+                  <path d="M4 12a8 8 0 0 1 8-8" stroke="currentColor"
+                        strokeWidth={2} strokeLinecap="round"/>
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="white"
+                     strokeWidth={2} className="w-3 h-3">
+                  <polyline points="3 6 5 6 21 6"/>
+                  <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                </svg>
+              )}
+            </button>
+
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const MediaLibrary = () => {
   const [assets,       setAssets]       = useState([]);
@@ -125,7 +153,7 @@ const MediaLibrary = () => {
 
   const { upload, uploading, progress } = useUpload();
 
-  // ── Load assets ─────────────────────────────────────────────────────────────
+  // ── Load assets ──────────────────────────────────────────────────────────────
   const load = useCallback(async (reset = true, cursor = null) => {
     setIsLoading(true);
     try {
@@ -216,6 +244,7 @@ const MediaLibrary = () => {
 
   return (
     <div className="space-y-5">
+
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
@@ -257,7 +286,7 @@ const MediaLibrary = () => {
       {usage && (
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
-            { label: 'Storage used', value: usage.storage.used },
+            { label: 'Storage used',  value: usage.storage.used },
             { label: 'Storage limit', value: usage.storage.limit },
             { label: 'Images',        value: usage.resources.images.toLocaleString() },
             { label: 'Videos',        value: usage.resources.videos.toLocaleString() },
@@ -289,7 +318,6 @@ const MediaLibrary = () => {
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3 items-center">
-        {/* Folder tabs */}
         <div className="flex gap-1 glass-card p-1 flex-wrap">
           {FOLDERS.map((f) => (
             <button key={f.value} onClick={() => setFolder(f.value)}
@@ -302,9 +330,8 @@ const MediaLibrary = () => {
           ))}
         </div>
 
-        {/* Resource type */}
         <div className="flex gap-1 glass-card p-1">
-          {['image','video'].map((t) => (
+          {['image', 'video'].map((t) => (
             <button key={t} onClick={() => setResourceType(t)}
                     className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize
                       transition-all
