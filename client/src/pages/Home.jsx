@@ -8,6 +8,7 @@ import StatsBar            from '@/components/home/StatsBar';
 import ServicesPreview     from '@/components/home/ServicesPreview';
 import TestimonialsPreview from '@/components/home/TestimonialsPreview';
 import ContactCTA          from '@/components/home/ContactCTA';
+import PricingPlans from '../components/home/PricingPlans';
 
 const Home = () => {
   const { settings } = useSite();
@@ -28,6 +29,7 @@ const Home = () => {
       <FeaturedProjects/>
       <ServicesPreview/>
       <TestimonialsPreview/>
+       <PricingPlans/>
       <ContactCTA/>
     </>
   );

@@ -137,3 +137,7 @@ export const submitContact = (data) =>
  */
 export const getSiteSettings = () =>
   axiosInstance.get('/api/settings');
+
+
+// get pricing plans 
+export const getPlans = () => axiosInstance.get('/api/plans');

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { ArrowRight } from 'lucide-react';
 import { getServices } from '@/api/publicApi';
 import { useSite } from '@/context/SiteContext';
 import useInView from '@/hooks/useInView';
@@ -20,15 +21,21 @@ const ICON_PATHS = {
 };
 
 const ServiceIcon = ({ name }) => (
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-       strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"
-       className="w-6 h-6">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={1.5}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="w-6 h-6"
+  >
     {ICON_PATHS[name] || ICON_PATHS.video}
   </svg>
 );
 
 const ServicesPreview = () => {
-  const [services,  setServices]  = useState([]);
+  const [services, setServices] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const { settings } = useSite();
   const [ref, inView] = useInView();
@@ -44,77 +51,108 @@ const ServicesPreview = () => {
   if (!isLoading && services.length === 0) return null;
 
   return (
-    <section ref={ref} className="section bg-night-900">
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={inView ? { opacity: 1, y: 0 } : {}}
-        transition={{ duration: 0.7 }}
-        className="text-center mb-14"
-      >
-        <span className="section-tag justify-center">
-          <span className="w-6 h-px bg-violet-400"/>
-          What I Do
-        </span>
-        <h2 className="font-display text-title text-white uppercase">
-          Services
-        </h2>
-        <p className="text-slate-500 max-w-lg mx-auto mt-4 text-sm leading-relaxed">
-          From raw footage to cinematic masterpiece — every service tailored to your vision.
-        </p>
-      </motion.div>
+    <section ref={ref} className="section relative overflow-hidden bg-night-900">
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[320px] w-[320px] rounded-full bg-violet-600/10 blur-3xl" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(139,92,246,0.12),transparent_32%)]" />
+      </div>
 
-      {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="h-40 rounded-2xl bg-night-800 animate-pulse"/>
-          ))}
-        </div>
-      ) : (
+      <div className="relative z-10">
         <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate={inView ? 'visible' : 'hidden'}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          initial={{ opacity: 0, y: 30 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7 }}
+          className="text-center mb-14 max-w-3xl mx-auto"
         >
-          {services.map((svc, i) => (
-            <motion.div
-              key={svc._id}
-              variants={staggerItem}
-              whileHover={{ y: -4 }}
-              className="glass p-6 group hover:border-violet-500/20
-                         transition-all duration-300"
-            >
-              <div className="w-12 h-12 rounded-xl bg-violet-600/10 flex items-center
-                              justify-center text-violet-400 mb-4
-                              group-hover:bg-violet-600/20 transition-colors duration-300">
-                <ServiceIcon name={svc.icon}/>
-              </div>
-              <h3 className="font-display text-lg text-white mb-2 tracking-wide">
-                {svc.title}
-              </h3>
-              <p className="text-sm text-slate-500 leading-relaxed">
-                {svc.shortDescription}
-              </p>
-              {svc.turnaround && (
-                <p className="text-xs text-violet-400/60 mt-3">
-                  ⏱ {svc.turnaround}
-                </p>
-              )}
-            </motion.div>
-          ))}
-        </motion.div>
-      )}
+          <span className="inline-flex items-center justify-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.24em] text-violet-300">
+            <span className="w-5 h-px bg-violet-400" />
+            What I Do
+          </span>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ delay: 0.6 }}
-        className="text-center mt-10"
-      >
-        <Link to="/services" className="btn-outline">
-          View all services
-        </Link>
-      </motion.div>
+          <h2 className="mt-5 font-display text-4xl md:text-5xl text-white uppercase leading-[0.95]">
+            Services that make
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-indigo-400">
+              content look premium
+            </span>
+          </h2>
+
+          <p className="text-slate-400 max-w-2xl mx-auto mt-4 text-sm md:text-base leading-relaxed">
+            From raw footage to polished edits, I create content that grabs
+            attention, improves retention, and feels built for modern platforms.
+          </p>
+        </motion.div>
+
+        {isLoading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="h-52 rounded-3xl border border-white/5 bg-night-800 animate-pulse"
+              />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            variants={staggerContainer}
+            initial="hidden"
+            animate={inView ? 'visible' : 'hidden'}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
+          >
+            {services.map((svc, i) => (
+              <motion.div
+                key={svc._id}
+                variants={staggerItem}
+                whileHover={{ y: -6 }}
+                className="group relative overflow-hidden rounded-3xl border border-white/8 bg-white/[0.03] p-6 backdrop-blur-xl transition-all duration-300 hover:border-violet-500/25 hover:shadow-[0_0_30px_rgba(139,92,246,0.12)]"
+              >
+                <div className="absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-[linear-gradient(135deg,rgba(139,92,246,0.08),transparent_45%,rgba(99,102,241,0.06))]" />
+
+                <div className="relative z-10">
+                  <div className="flex items-start justify-between gap-4 mb-5">
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500/20 to-indigo-500/20 border border-violet-400/10 flex items-center justify-center text-violet-300 group-hover:scale-105 transition-transform duration-300">
+                      <ServiceIcon name={svc.icon} />
+                    </div>
+
+                    <span className="text-xs font-display text-slate-600">
+                      {String(i + 1).padStart(2, '0')}
+                    </span>
+                  </div>
+
+                  <h3 className="font-display text-xl text-white tracking-wide mb-2">
+                    {svc.title}
+                  </h3>
+
+                  <p className="text-sm text-slate-400 leading-relaxed min-h-[72px]">
+                    {svc.shortDescription}
+                  </p>
+
+                  {svc.turnaround && (
+                    <div className="mt-5 inline-flex items-center rounded-full border border-violet-500/15 bg-violet-500/[0.08] px-3 py-1.5 text-xs text-violet-200">
+                      <span className="mr-2 text-violet-400">⏱</span>
+                      {svc.turnaround}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.5 }}
+          className="text-center mt-12"
+        >
+          <Link
+            to="/services"
+            className="inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-purple-500 to-indigo-500 shadow-lg shadow-purple-500/25 hover:scale-[1.02] hover:shadow-purple-500/40 transition-all duration-300"
+          >
+            View all services
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </motion.div>
+      </div>
     </section>
   );
 };

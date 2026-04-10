@@ -23,6 +23,7 @@ const settingsRoutes    = require('./routes/settings.routes');
 const uploadRoutes      = require('./routes/upload.routes');
 const dashboardRoutes   = require('./routes/dashboard.routes');
 const mediaRoutes = require('./routes/media.routes');
+const planRoutes = require('./routes/plan.routes');
 
 const app = express();
 
@@ -92,6 +93,7 @@ app.use('/api/services',     serviceRoutes);
 app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact',      contactRoutes);
 app.use('/api/settings',     settingsRoutes);
+app.use('/api/plans',        planRoutes);
 
 // Admin-only routes (all internally protected with middleware)
 app.use('/api/admin/upload',    uploadRoutes);

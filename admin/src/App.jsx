@@ -27,6 +27,7 @@ const SiteSettingsPage   = lazy(() => import('@/pages/settings/SiteSettingsPage'
 const ChangePassword     = lazy(() => import('@/pages/settings/ChangePassword'));
 const MediaLibrary       = lazy(() => import('@/pages/media/MediaLibrary'));
 const ProjectReorder     = lazy(() => import('@/pages/projects/ProjectReorder'));
+const PlansPage          = lazy(() => import('./pages/plans/PlansPage'));
 
 const App = () => {
   const { getAccessToken, silentRefresh, logout } = useAuth();
@@ -73,6 +74,7 @@ const App = () => {
           <Route path="testimonials"       element={<TestimonialsManager />} />
           <Route path="media"              element={<MediaLibrary/>} />
           <Route path="projects/reorder"   element={<ProjectReorder />} />
+          <Route path="plans"              element={<PlansPage />} />
 
           {/* Inquiries */}
           <Route path="inquiries"          element={<InquiriesManager />} />

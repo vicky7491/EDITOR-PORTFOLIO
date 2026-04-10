@@ -25,6 +25,7 @@ const NAV_ITEMS = [
     group: 'Services',
     links: [
       { to: '/admin/services',    label: 'Services',      icon: 'briefcase' },
+      { to: '/admin/plans',       label: 'Pricing Plans', icon: 'dollar-sign' },
       { to: '/admin/testimonials',label: 'Testimonials',  icon: 'star' },
     ],
   },
@@ -52,6 +53,7 @@ const ICONS = {
   play:      <><polygon points="5 3 19 12 5 21 5 3"/></>,
   tag:       <><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></>,
   briefcase: <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></>,
+  'dollar-sign': <><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>,
   star:      <><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></>,
   mail:      <><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></>,
   layout:    <><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></>,
