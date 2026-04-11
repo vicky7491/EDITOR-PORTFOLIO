@@ -7,6 +7,7 @@ cloudinary.config({
   api_key:    process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   secure:     true, // Always use HTTPS
+  timeout:    10 * 60 * 1000, // 10 minutes
 });
 
 module.exports = cloudinary;

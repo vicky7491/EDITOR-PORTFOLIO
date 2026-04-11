@@ -25,18 +25,24 @@ const PricingPlans = () => {
           whileInView="visible"
           viewport={{ once: true }}
         >
-          <motion.div variants={staggerItem} className="mb-14 text-center">
-            <span className="section-tag justify-center">
-              <span className="w-6 h-px bg-violet-400" />
-              Pricing
-            </span>
-            <h2 className="font-display text-4xl text-white uppercase">
-              Choose Your Plan
-            </h2>
-            <p className="text-slate-500 text-sm mt-3 max-w-md mx-auto">
-              Transparent pricing built around your growth goals.
-            </p>
-          </motion.div>
+          <motion.div variants={staggerItem} className="mb-16 text-center max-w-3xl mx-auto">
+  <span className="inline-flex items-center justify-center gap-2 rounded-full border border-violet-500/20 bg-violet-500/10 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.24em] text-violet-300">
+    <span className="w-5 h-px bg-violet-400" />
+    Pricing
+  </span>
+
+  <h2 className="mt-5 font-display text-4xl md:text-5xl leading-[0.95] uppercase text-white">
+    Choose the plan
+    <span className="block text-transparent bg-clip-text bg-gradient-to-r from-violet-300 to-indigo-400">
+      that fits your growth
+    </span>
+  </h2>
+
+  <p className="text-slate-400 text-sm md:text-base mt-4 max-w-2xl mx-auto leading-relaxed">
+    Flexible pricing designed for creators, coaches, and brands who want
+    high-quality editing without the agency headache.
+  </p>
+</motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {plans.map((plan) => (

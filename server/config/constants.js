@@ -29,7 +29,7 @@ const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif
 const ALLOWED_VIDEO_TYPES = ['video/mp4', 'video/mov', 'video/avi', 'video/mkv', 'video/webm'];
 
 const MAX_IMAGE_SIZE_MB = 10;
-const MAX_VIDEO_SIZE_MB = 500;
+const MAX_VIDEO_SIZE_MB = 100;
 
 module.exports = {
   ROLES,

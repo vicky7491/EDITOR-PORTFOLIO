@@ -57,7 +57,7 @@ const ServicesPreview = () => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(139,92,246,0.12),transparent_32%)]" />
       </div>
 
-      <div className="relative z-10">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}

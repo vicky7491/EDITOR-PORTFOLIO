@@ -22,6 +22,7 @@ const VideoUploader = ({ value, onChange, label = 'Upload video' }) => {
         formData,
         {
           headers: { 'Content-Type': 'multipart/form-data' },
+          timeout : 0, // Disable timeout for large uploads
           onUploadProgress: (e) => {
             const pct = Math.round((e.loaded * 100) / e.total);
             setProgress(pct);
@@ -127,7 +128,7 @@ const VideoUploader = ({ value, onChange, label = 'Upload video' }) => {
               </svg>
               <p className="text-sm text-slate-400 mb-1">{label}</p>
               <p className="text-xs text-slate-600">
-                MP4, MOV, WebM · Max 500MB
+                MP4, MOV, WebM · Max 100MB
               </p>
             </>
           )}
