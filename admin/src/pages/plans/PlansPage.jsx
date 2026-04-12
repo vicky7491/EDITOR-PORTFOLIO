@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
 import axiosAdmin from "@/api/axiosAdmin";
-import {
-  getAdminPlans,
-  createPlan,
-  updatePlan,
-  deletePlan,
-} from "@/api/PlanApi";
+
 
 const EMPTY = {
   name: "",
