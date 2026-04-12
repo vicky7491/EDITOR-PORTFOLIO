@@ -4,7 +4,7 @@ import { siteApi } from '@/api/siteApi';
 const SiteContext = createContext(null);
 
 export const SiteProvider = ({ children }) => {
-  const [settings,  setSettings]  = useState(null);
+  const [settings,  setSettings]  = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ export const SiteProvider = ({ children }) => {
 
   return (
     <SiteContext.Provider value={{ settings, isLoading }}>
-      {children}
+      {isLoading ? null :  children}
     </SiteContext.Provider>
   );
 };
