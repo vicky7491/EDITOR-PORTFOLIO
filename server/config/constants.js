@@ -17,12 +17,12 @@ const PROJECT_STATUS = Object.freeze({
 });
 
 const UPLOAD_FOLDERS = Object.freeze({
-  THUMBNAILS:   'cineedit/thumbnails',
-  VIDEOS:       'cineedit/videos',
-  AVATARS:      'cineedit/avatars',
-  SERVICES:     'cineedit/services',
-  SITE_ASSETS:  'cineedit/site',
-  BEFORE_AFTER: 'cineedit/before-after',
+  THUMBNAILS:   'vickyvfx/thumbnails',
+  VIDEOS:       'vickyvfx/videos',
+  AVATARS:      'vickyvfx/avatars',
+  SERVICES:     'vickyvfx/services',
+  SITE_ASSETS:  'vickyvfx/site',
+  BEFORE_AFTER: 'vickyvfx/before-after',
 });
 
 const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];

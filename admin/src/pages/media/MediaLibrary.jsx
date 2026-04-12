@@ -13,13 +13,13 @@ import ConfirmModal from '@/components/ui/ConfirmModal';
 import SearchBar    from '@/components/ui/SearchBar';
 
 const FOLDERS = [
-  { value: 'cineedit',              label: 'All' },
-  { value: 'cineedit/thumbnails',   label: 'Thumbnails' },
-  { value: 'cineedit/videos',       label: 'Videos' },
-  { value: 'cineedit/avatars',      label: 'Avatars' },
-  { value: 'cineedit/services',     label: 'Services' },
-  { value: 'cineedit/site',         label: 'Site' },
-  { value: 'cineedit/before-after', label: 'Before/After' },
+  { value: 'vickyvfx',              label: 'All' },
+  { value: 'vickyvfx/thumbnails',   label: 'Thumbnails' },
+  { value: 'vickyvfx/videos',       label: 'Videos' },
+  { value: 'vickyvfx/avatars',      label: 'Avatars' },
+  { value: 'vickyvfx/services',     label: 'Services' },
+  { value: 'vickyvfx/site',         label: 'Site' },
+  { value: 'vickyvfx/before-after', label: 'Before/After' },
 ];
 
 const formatBytes = (bytes) => {
@@ -142,7 +142,7 @@ const MediaLibrary = () => {
   const [assets,       setAssets]       = useState([]);
   const [isLoading,    setIsLoading]    = useState(true);
   const [nextCursor,   setNextCursor]   = useState(null);
-  const [folder,       setFolder]       = useState('cineedit');
+  const [folder,       setFolder]       = useState('vickyvfx');
   const [resourceType, setResourceType] = useState('image');
   const [search,       setSearch]       = useState('');
   const [selected,     setSelected]     = useState(new Set());
@@ -234,7 +234,7 @@ const MediaLibrary = () => {
   };
 
   const handleUpload = async (file) => {
-    const uploadFolder = folder.replace('cineedit/', '') || 'thumbnails';
+    const uploadFolder = folder.replace('vickyvfx/', '') || 'thumbnails';
     const media = await upload(file, { type: resourceType, folder: uploadFolder });
     if (media) {
       toast.success('Uploaded');

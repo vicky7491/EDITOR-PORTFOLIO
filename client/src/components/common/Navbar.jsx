@@ -52,7 +52,7 @@ const Navbar = () => {
               </svg>
             </div>
             <span className="font-bold text-lg text-white tracking-tight">
-              {settings?.siteTitle?.split('—')[0]?.trim() || 'CineEdit'}
+              {settings?.siteTitle?.split('—')[0]?.trim() || 'VickyVfx'}
             </span>
           </Link>
 

@@ -35,7 +35,7 @@ const PageLoader = ({ message = 'Loading...' }) => {
         transition={{ delay: 0.2 }}
         className="text-gradient text-xl font-semibold tracking-wide mb-2"
       >
-        CineEdit
+        VickyVfx
       </motion.p>
 
       <motion.p

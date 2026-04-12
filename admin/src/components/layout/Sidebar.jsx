@@ -94,7 +94,7 @@ const Sidebar = ({ onClose }) => {
           </svg>
         </div>
         <div>
-          <p className="text-sm font-semibold text-slate-100">CineEdit</p>
+          <p className="text-sm font-semibold text-slate-100">VickyVfx</p>
           <p className="text-xs text-slate-500">Admin Panel</p>
         </div>
       </div>

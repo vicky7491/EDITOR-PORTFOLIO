@@ -22,7 +22,7 @@ const sendEmail = async ({ to, subject, html }) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from:    process.env.EMAIL_FROM || 'CineEdit <noreply@cineedit.com>',
+    from:    process.env.EMAIL_FROM || 'VickyVfx <noreply@vickyvfx.com>',
     to,
     subject,
     html,
@@ -44,7 +44,7 @@ const newInquiryEmailHTML = (inquiry) => `
   <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
     <div style="background: #0f0f0f; color: #fff; padding: 24px; border-radius: 8px 8px 0 0;">
       <h2 style="margin: 0; color: #a78bfa;">📬 New Contact Inquiry</h2>
-      <p style="margin: 4px 0 0; color: #888; font-size: 13px;">CineEdit Portfolio</p>
+      <p style="margin: 4px 0 0; color: #888; font-size: 13px;">VickyVfx Portfolio</p>
     </div>
     <div style="background: #1a1a1a; color: #e5e5e5; padding: 24px; border-radius: 0 0 8px 8px;">
       <table style="width: 100%; border-collapse: collapse;">

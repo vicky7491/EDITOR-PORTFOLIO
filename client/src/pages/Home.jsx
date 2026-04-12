@@ -17,7 +17,7 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>{seo?.defaultTitle || settings.siteTitle || 'CineEdit'}</title>
+        <title>{seo?.defaultTitle || settings.siteTitle || 'VickyVfx'}</title>
         <meta name="description" content={seo?.description || ''}/>
         <meta name="keywords"    content={seo?.keywords    || ''}/>
         {seo?.ogImage && <meta property="og:image" content={seo.ogImage}/>}

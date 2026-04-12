@@ -34,8 +34,8 @@ const Testimonials = () => {
   return (
     <>
       <Helmet>
-        <title>Testimonials — {settings.siteTitle || 'CineEdit'}</title>
-        <meta name="description" content="What clients say about CineEdit video editing services."/>
+        <title>Testimonials — {settings.siteTitle || 'VickyVfx'}</title>
+        <meta name="description" content="What clients say about VickyVfx video editing services."/>
       </Helmet>
 
       {/* Hero */}

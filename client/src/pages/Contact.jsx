@@ -91,7 +91,7 @@ const Contact = () => {
   return (
     <>
       <Helmet>
-        <title>Contact — {settings.siteTitle || 'CineEdit'}</title>
+        <title>Contact — {settings.siteTitle || 'VickyVfx'}</title>
         <meta name="description" content="Get in touch to start your next video project."/>
       </Helmet>
 

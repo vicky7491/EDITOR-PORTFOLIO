@@ -35,7 +35,7 @@ const Portfolio = () => {
   return (
     <>
       <Helmet>
-        <title>Portfolio — {settings.siteTitle || 'CineEdit'}</title>
+        <title>Portfolio — {settings.siteTitle || 'VickyVfx'}</title>
         <meta
           name="description"
           content="Browse my portfolio of editing projects for creators and brands."

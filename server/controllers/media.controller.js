@@ -25,7 +25,7 @@ const FOLDER_LABELS = {
 const listMedia = async (req, res, next) => {
   try {
     const {
-      folder = "cineedit",
+      folder = "vickyvfx",
       resource_type = "image",
       page = 1,
       limit = 24,
@@ -103,7 +103,7 @@ const searchMedia = async (req, res, next) => {
       );
     }
 
-    const expression = `folder:cineedit* AND filename:*${q}* AND resource_type:${resource_type}`;
+    const expression = `folder:vickyvfx* AND filename:*${q}* AND resource_type:${resource_type}`;
 
     const result = await cloudinary.search
       .expression(expression)
@@ -150,10 +150,10 @@ const deleteMedia = async (req, res, next) => {
 
     if (!publicId) return next(new AppError("Public ID is required", 400));
 
-    // Validate the asset belongs to our cineedit folder (security check)
-    if (!publicId.startsWith("cineedit/")) {
+    // Validate the asset belongs to our vickyvfx folder (security check)
+    if (!publicId.startsWith("vickyvfx/")) {
       return next(
-        new AppError("Cannot delete assets outside the cineedit folder", 403),
+        new AppError("Cannot delete assets outside the vickyvfx folder", 403),
       );
     }
 
@@ -196,10 +196,10 @@ const bulkDeleteMedia = async (req, res, next) => {
     }
 
     // Security: ensure all IDs are within our folder
-    const invalid = publicIds.filter((id) => !id.startsWith("cineedit/"));
+    const invalid = publicIds.filter((id) => !id.startsWith("vickyvfx/"));
     if (invalid.length > 0) {
       return next(
-        new AppError("All publicIds must be within the cineedit folder", 403),
+        new AppError("All publicIds must be within the vickyvfx folder", 403),
       );
     }
 
@@ -282,7 +282,7 @@ const getMediaUsage = async (req, res, next) => {
 // ─────────────────────────────────────────────────────────────────────────────
 const getUploadSignature = (req, res, next) => {
   try {
-    const { folder = "cineedit/thumbnails", resource_type = "image" } =
+    const { folder = "vickyvfx/thumbnails", resource_type = "image" } =
       req.query;
     const timestamp = Math.round(Date.now() / 1000);
     const paramsToSign = { folder, timestamp };

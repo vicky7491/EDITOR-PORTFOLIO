@@ -79,7 +79,7 @@ const Footer = () => {
                 </svg>
               </div>
               <span className="font-bold text-lg text-white">
-                {settings?.siteTitle?.split('—')[0]?.trim() || 'CineEdit'}
+                {settings?.siteTitle?.split('—')[0]?.trim() || 'VickyVfx'}
               </span>
             </Link>
 
@@ -136,7 +136,7 @@ const Footer = () => {
         <div className="mt-12 pt-6 border-t border-white/5
                         flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-600 text-xs">
-            {settings?.footerText || `© ${new Date().getFullYear()} CineEdit. All rights reserved.`}
+            {settings?.footerText || `© ${new Date().getFullYear()} VickyVfx. All rights reserved.`}
           </p>
           <p className="text-slate-700 text-xs">
             Built with ♥ for cinematic storytelling

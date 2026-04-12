@@ -21,7 +21,7 @@ const submitContactForm = async (req, res, next) => {
     if (process.env.EMAIL_USER) {
       sendEmail({
         to:      process.env.EMAIL_USER,
-        subject: `📬 New Inquiry from ${name} — CineEdit`,
+        subject: `📬 New Inquiry from ${name} — VickyVfx`,
         html:    newInquiryEmailHTML(inquiry),
       });
     }

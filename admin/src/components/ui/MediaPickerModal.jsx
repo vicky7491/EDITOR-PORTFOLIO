@@ -8,12 +8,12 @@ import useUpload from '@/hooks/useUpload';
 import toast from 'react-hot-toast';
 
 const FOLDERS = [
-  { value: 'cineedit',              label: 'All assets' },
-  { value: 'cineedit/thumbnails',   label: 'Thumbnails' },
-  { value: 'cineedit/avatars',      label: 'Avatars' },
-  { value: 'cineedit/services',     label: 'Services' },
-  { value: 'cineedit/site',         label: 'Site assets' },
-  { value: 'cineedit/before-after', label: 'Before/After' },
+  { value: 'vickyvfx',              label: 'All assets' },
+  { value: 'vickyvfx/thumbnails',   label: 'Thumbnails' },
+  { value: 'vickyvfx/avatars',      label: 'Avatars' },
+  { value: 'vickyvfx/services',     label: 'Services' },
+  { value: 'vickyvfx/site',         label: 'Site assets' },
+  { value: 'vickyvfx/before-after', label: 'Before/After' },
 ];
 
 const formatBytes = (bytes) => {
@@ -27,7 +27,7 @@ const MediaPickerModal = ({
   onClose,
   onSelect,         // (media: { url, publicId }) => void
   resourceType = 'image',
-  folder:       defaultFolder = 'cineedit',
+  folder:       defaultFolder = 'vickyvfx',
 }) => {
   const [assets,      setAssets]      = useState([]);
   const [isLoading,   setIsLoading]   = useState(false);
@@ -90,7 +90,7 @@ const MediaPickerModal = ({
   };
 
   const handleUploadAndSelect = async (file) => {
-    const uploadFolder = folder.replace('cineedit/', '') || 'thumbnails';
+    const uploadFolder = folder.replace('vickyvfx/', '') || 'thumbnails';
     const media = await upload(file, { type: resourceType, folder: uploadFolder });
     if (media) {
       onSelect(media);

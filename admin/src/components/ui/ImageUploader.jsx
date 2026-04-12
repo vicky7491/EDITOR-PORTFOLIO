@@ -192,7 +192,7 @@ const ImageUploader = ({
         onClose={() => setPickerOpen(false)}
         onSelect={handleLibrarySelect}
         resourceType="image"
-        folder={`cineedit/${folder}`}
+        folder={`vickyvfx/${folder}`}
       />
     </div>
   );

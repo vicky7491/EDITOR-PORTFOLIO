@@ -62,7 +62,7 @@ const SiteSettingsPage = () => {
                          border-white/5 pb-3">Brand</h3>
           <div>
             <label className="admin-label">Site title</label>
-            <input className="admin-input" placeholder="CineEdit"
+            <input className="admin-input" placeholder="VickyVfx"
                    {...register('siteTitle')}/>
           </div>
           <div>

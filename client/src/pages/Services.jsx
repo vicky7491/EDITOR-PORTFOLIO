@@ -22,7 +22,7 @@ const Services = () => {
   return (
     <>
       <Helmet>
-        <title>Services — {settings.siteTitle || 'CineEdit'}</title>
+        <title>Services — {settings.siteTitle || 'VickyVfx'}</title>
         <meta
           name="description"
           content="Professional video editing services tailored to your brand."

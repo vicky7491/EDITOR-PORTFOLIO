@@ -38,7 +38,7 @@ const seoSchema = new mongoose.Schema({
 
 const siteSettingsSchema = new mongoose.Schema(
   {
-    siteTitle:   { type: String, default: 'CineEdit — Professional Video Editor' },
+    siteTitle:   { type: String, default: 'VickyVfx — Professional Video Editor' },
     tagline:     String,
 
     logo: {
@@ -72,7 +72,7 @@ const siteSettingsSchema = new mongoose.Schema(
 
     footerText: {
       type:    String,
-      default: '© 2024 CineEdit. All rights reserved.',
+      default: '© 2024 VickyVfx. All rights reserved.',
     },
 
     // Feature flags — turn sections on/off from admin

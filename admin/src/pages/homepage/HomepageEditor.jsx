@@ -201,7 +201,7 @@ const HomepageEditor = () => {
         {activeTab === 'contact' && (
           <div className="glass-card p-6 space-y-4">
             {[
-              ['email',    'Email address',  'email',  'contact@cineedit.com'],
+              ['email',    'Email address',  'email',  'contact@vickyvfx.com'],
               ['phone',    'Phone number',   'tel',    '+1 234 567 8901'],
               ['whatsapp', 'WhatsApp',       'tel',    '+1 234 567 8901'],
               ['location', 'Location',       'text',   'Los Angeles, CA'],
@@ -221,7 +221,7 @@ const HomepageEditor = () => {
             <div>
               <label className="admin-label">Default page title</label>
               <input className="admin-input"
-                     placeholder="CineEdit — Professional Video Editor"
+                     placeholder="VickyVfx — Professional Video Editor"
                      {...register('seo.defaultTitle')}/>
             </div>
             <div>
@@ -251,7 +251,7 @@ const HomepageEditor = () => {
             <div>
               <label className="admin-label">Footer text</label>
               <input className="admin-input"
-                     placeholder="© 2024 CineEdit. All rights reserved."
+                     placeholder="© 2024 VickyVfx. All rights reserved."
                      {...register('footerText')}/>
             </div>
           </div>

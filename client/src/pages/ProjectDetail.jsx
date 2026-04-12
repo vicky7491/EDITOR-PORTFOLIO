@@ -47,7 +47,7 @@ const ProjectDetail = () => {
     <>
       <Helmet>
         <title>
-          {project.title} — {settings.siteTitle || "CineEdit"}
+          {project.title} — {settings.siteTitle || "VickyVfx"}
         </title>
         <meta name="description" content={project.shortDescription || ""} />
         {project.thumbnail?.url && (

@@ -139,7 +139,7 @@ const Login = () => {
               Admin Panel
             </h1>
             <p className="text-slate-500 text-sm">
-              CineEdit — Content Management
+              VickyVfx — Content Management
             </p>
           </motion.div>
 
@@ -181,7 +181,7 @@ const Login = () => {
                     id="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="admin@cineedit.com"
+                    placeholder="admin@vickyvfx.com"
                     className={`admin-input pl-10 ${
                       errors.email ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30' : ''
                     }`}

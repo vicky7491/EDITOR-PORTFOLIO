@@ -20,7 +20,7 @@ const {
 const resolveFolder = (req, defaultFolder) => {
   const allowed = Object.values(UPLOAD_FOLDERS);
   const requested = req.query.folder
-    ? `cineedit/${req.query.folder}`
+    ? `vickyvfx/${req.query.folder}`
     : defaultFolder;
   return allowed.includes(requested) ? requested : defaultFolder;
 };

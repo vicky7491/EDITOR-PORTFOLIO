@@ -348,7 +348,7 @@ const About = () => {
   return (
     <>
       <Helmet>
-        <title>About — {settings.siteTitle || 'CineEdit'}</title>
+        <title>About — {settings.siteTitle || 'VickyVfx'}</title>
         <meta
           name="description"
           content="Intermediate video editor creating polished YouTube videos, short-form content, and branded edits for creators and growing businesses."

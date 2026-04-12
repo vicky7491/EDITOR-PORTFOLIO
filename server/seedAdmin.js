@@ -11,7 +11,7 @@ const { connectDB } = require('./config/db');
 const seed = async () => {
   await connectDB();
 
-  const email    = process.env.ADMIN_EMAIL    || 'admin@cineedit.com';
+  const email    = process.env.ADMIN_EMAIL    || 'admin@vickyvfx.com';
   const password = process.env.ADMIN_PASSWORD || 'Admin@123456';
 
   const existing = await Admin.findOne({ email });
