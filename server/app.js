@@ -26,7 +26,7 @@ const mediaRoutes = require('./routes/media.routes');
 const planRoutes = require('./routes/plan.routes');
 
 const app = express();
-
+app.set('trust proxy', 1);
 // ─── Security Middleware ──────────────────────────────────
 
 // Set secure HTTP headers
