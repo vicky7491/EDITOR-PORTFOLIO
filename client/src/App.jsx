@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useState } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 
 import Navbar         from '@/components/common/Navbar';
 import Footer         from '@/components/common/Footer';
@@ -86,6 +87,9 @@ const App = () => {
 
       {/* Footer */}
       <Footer/>
+
+      {/* Vercel Web Analytics */}
+      <Analytics/>
     </>
   );
 };
