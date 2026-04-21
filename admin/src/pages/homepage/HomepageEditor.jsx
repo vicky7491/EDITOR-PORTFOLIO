@@ -201,7 +201,7 @@ const HomepageEditor = () => {
         {activeTab === 'contact' && (
           <div className="glass-card p-6 space-y-4">
             {[
-              ['email',    'Email address',  'email',  'contact@vickyvfx.com'],
+              ['email',    'Email address',  'email',  'contact@vickyvfx.me'],
               ['phone',    'Phone number',   'tel',    '+1 234 567 8901'],
               ['whatsapp', 'WhatsApp',       'tel',    '+1 234 567 8901'],
               ['location', 'Location',       'text',   'Los Angeles, CA'],
