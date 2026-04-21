@@ -181,7 +181,7 @@ const Login = () => {
                     id="email"
                     type="email"
                     autoComplete="email"
-                    placeholder="admin@vickyvfx.me"
+                    placeholder="admin@vickyvfx.com"
                     className={`admin-input pl-10 ${
                       errors.email ? 'border-red-500/50 focus:border-red-500 focus:ring-red-500/30' : ''
                     }`}

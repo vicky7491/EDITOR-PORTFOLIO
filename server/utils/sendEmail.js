@@ -22,7 +22,7 @@ const sendEmail = async ({ to, subject, html }) => {
   const transporter = createTransporter();
 
   const mailOptions = {
-    from:    process.env.EMAIL_FROM || 'VickyVfx <noreply@vickyvfx.me>',
+    from:    process.env.EMAIL_FROM || 'VickyVfx <noreply@vickyvfx.com>',
     to,
     subject,
     html,
