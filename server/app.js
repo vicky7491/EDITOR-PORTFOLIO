@@ -95,7 +95,7 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact',      contactRoutes);
 app.use('/api/settings',     settingsRoutes);
 app.use('/api/plans',        planRoutes);
-app.use('/api/sitemap',      sitemapRouter);
+app.use('/',      sitemapRouter);
 
 // Admin-only routes (all internally protected with middleware)
 app.use('/api/admin/upload',    uploadRoutes);
