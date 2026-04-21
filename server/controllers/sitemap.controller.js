@@ -1,4 +1,4 @@
-const Project = require("../models/Project");
+const Project = require("../models/Project.model");
 
 const SITE_URL = "https://vickyvfx.me";
 
