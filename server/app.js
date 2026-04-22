@@ -24,7 +24,7 @@ const uploadRoutes      = require('./routes/upload.routes');
 const dashboardRoutes   = require('./routes/dashboard.routes');
 const mediaRoutes = require('./routes/media.routes');
 const planRoutes = require('./routes/plan.routes');
-const sitemapRouter = require('./routes/sitemap.routes');
+
 
 const app = express();
 app.set('trust proxy', 1);
@@ -95,7 +95,7 @@ app.use('/api/testimonials', testimonialRoutes);
 app.use('/api/contact',      contactRoutes);
 app.use('/api/settings',     settingsRoutes);
 app.use('/api/plans',        planRoutes);
-app.use('/',      sitemapRouter);
+
 
 // Admin-only routes (all internally protected with middleware)
 app.use('/api/admin/upload',    uploadRoutes);
